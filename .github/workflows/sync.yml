@@ -1,0 +1,21 @@
+name: Sync Fork
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # runs every day at midnight
+  workflow_dispatch:  # lets you trigger manually too
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync upstream
+        run: |
+          git remote add upstream https://github.com/Dadoum/anisette-v3-server
+          git fetch upstream
+          git merge upstream/main --allow-unrelated-histories
+          git push
